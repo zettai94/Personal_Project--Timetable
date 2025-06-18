@@ -31,3 +31,12 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# === Database Files ===
+*.mv.db
+*.trace.db
+/data/*.mv.db
+/data/*.trace.db
+
+# === Initial Data Files (Excel, CSV, etc.) ===
+*.xlsx
