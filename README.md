@@ -30,7 +30,7 @@ A Spring Boot web application where an **administrator uploads an Excel file** c
 
 ---
 
-## 🗂️ Excel File Format
+## 🗂️ Excel File Format (Sample)
 
 | Day      | Start Time | End Time | Course Name     | Location   |
 |----------|------------|----------|------------------|------------|
@@ -53,3 +53,5 @@ A Spring Boot web application where an **administrator uploads an Excel file** c
 ---
 
 Work in progress...
+
+---
