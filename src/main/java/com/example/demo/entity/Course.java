@@ -1,10 +1,10 @@
-package com.example.demo.entities;
+package com.example.demo.entity;
 
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Id;
 import lombok.*;
 
 @Entity
@@ -52,4 +52,22 @@ public class Course {
                 inverseJoinColumns = @JoinColumn(name = "profId"))
     private Set<Professor> professors;
 
+    @Override
+    public String toString()
+    {
+        String profList = professors != null? professors.stream().map(Professor::getProfName)
+                            .collect(Collectors.joining(", ")) : "N/A";
+        return "Course{" +
+                "crn=" + crn +
+                ", coreq=" + coreq +
+                ", course=" + course +
+                ", title=" + title +
+                ", days=" + days +
+                ", startDate=" + startDate +
+                ", endDate=" +endDate +
+                ", room=" + room +
+                ", campus=" + (campus != null ? campus.getCampusName() : "null") +
+                ", professors=" + profList;
+
+    }
 }
