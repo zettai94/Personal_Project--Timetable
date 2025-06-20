@@ -21,4 +21,12 @@ public class Campus {
 
     @Column(name = "campusName")
     private String campusName;
+
+    @Override
+    public String toString() {
+        return "Campus{" +
+                "campusId=" + campusId +
+                ", campusName='" + campusName + '\'' +
+                '}';
+    }
 }
