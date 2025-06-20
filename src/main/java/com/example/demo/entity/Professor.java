@@ -25,4 +25,12 @@ public class Professor {
     @ManyToMany(mappedBy = "professors")
     private Set<Course> courses;
 
+    @Override
+    public String toString() {
+        return "Professor{" +
+                "prof_id=" + prof_id +
+                ", profName='" + profName + '\'' +
+                '}';
+    }
+
 }
