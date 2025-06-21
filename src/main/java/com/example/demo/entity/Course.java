@@ -64,7 +64,7 @@ public class Course {
                 ", title=" + title +
                 ", days=" + days +
                 ", startDate=" + startDate +
-                ", endDate=" +endDate +
+                ", endDate=" + endDate +
                 ", room=" + room +
                 ", campus=" + (campus != null ? campus.getCampusName() : "null") +
                 ", professors=" + profList;

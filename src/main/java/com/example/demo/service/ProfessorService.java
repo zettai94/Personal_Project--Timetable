@@ -32,7 +32,7 @@ public class ProfessorService
     }
 
     //retrieve all the professors in the database
-    public Iterable<Professor> retrieveAllProfessors() {
+    public List<Professor> retrieveAllProfessors() {
         return (List<Professor>) professorRepo.findAll();
     }
 }

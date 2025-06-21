@@ -3,13 +3,17 @@ package com.example.demo.entity;
 import java.util.Set;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "professors")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Professor {
 
     @Column(name = "profId")

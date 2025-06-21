@@ -22,13 +22,14 @@ public class CampusService
     public Campus newCampus(String campusName)
     {
         //if campusName does not exist, add to database
-        if(campusRepo.findByCampusName(campusName)!= null)
+        if(campusRepo.findByCampusName(campusName) == null)
         {
             Campus newCamp = new Campus();
             newCamp.setCampusName(campusName);
             return campusRepo.save(newCamp);
         }
         return null;
+        //to be edited later; throw exception if name already exists
     }
 
     //retrieve all the campuses in the database
