@@ -22,8 +22,8 @@ public class Professor {
 
     //mappedBy to avoid duplicate mapping; bidirectional association between Course and Professor
     //may have one or multiple more courses
-    @ManyToMany(mappedBy = "professors")
-    private Set<Course> courses;
+    // @ManyToMany(mappedBy = "professors")
+    // private Set<Course> courses;
 
     @Override
     public String toString() {
