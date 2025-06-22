@@ -20,14 +20,10 @@ public class ProfessorService
     //Create a new Professor in the database
     public Professor newProfessor(String name)
     {
-        //If name does not exist, add to database
-        //assuming that professor names are unique
-        if (professorRepo.findByProfName(name) == null) {
-            Professor newProf = new Professor();
-            newProf.setProfName(name);
-            return professorRepo.save(newProf);
-        }
-        return null;
+        //Does not consider duplicate names for now
+        Professor newProf = new Professor();
+        newProf.setProfName(name);
+        return professorRepo.save(newProf);
         //to be edited later; throw exception if name already exists
     }
 
