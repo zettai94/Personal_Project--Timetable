@@ -19,7 +19,7 @@ public class CampusService
     }
 
     //create new Campus in the database
-    public Campus newCampus(String campusName)
+    public Campus getOrCreateCampus(String campusName)
     {
         //if campusName does not exist, add to database
         if(campusRepo.findByCampusName(campusName) == null)
@@ -28,8 +28,8 @@ public class CampusService
             newCamp.setCampusName(campusName);
             return campusRepo.save(newCamp);
         }
-        return null;
-        //to be edited later; throw exception if name already exists
+        return campusRepo.findByCampusName(campusName);
+        //otherwise return the existing campus
     }
 
     //retrieve all the campuses in the database

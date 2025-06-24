@@ -9,10 +9,13 @@ import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+
+import com.example.demo.entity.Course;
 import com.example.demo.repository.CourseRepository;
 
 @Service
 public class CourseService {
+    
     private final CourseRepository courseRepo;
 
     @Autowired
@@ -30,14 +33,23 @@ public class CourseService {
 
             for(Row row: sheet)
             {
+                //skip header row
+                if(row.getRowNum() == 0) 
+                {
+                    continue; 
+                }
+
+                // Create Campus first
+                // only create Campus if it does not exist in the database
+                String campusName = row.getCell(0).getStringCellValue();
+                
+
+                //Create Professor next; if there's "," then there's multiple professors
+                // Professor can have same name but different id depending on the course
                 
             }
             
-            // Create Campus first
-            // only create Campus if it does not exist in the database
 
-            //Create Professor next; if there's "," then there's multiple professors
-            // Professor can have same name but different id depending on the course
         
         } catch (IOException e) {
             e.printStackTrace();
