@@ -37,6 +37,7 @@ public class CourseService {
             // only create Campus if it does not exist in the database
 
             //Create Professor next; if there's "," then there's multiple professors
+            // Professor can have same name but different id depending on the course
         
         } catch (IOException e) {
             e.printStackTrace();
