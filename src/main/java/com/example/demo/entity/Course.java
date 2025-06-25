@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,12 @@ public class Course {
 
     @Column(name = "Days")
     private String days;
+
+    @Column(name = "startTime")
+    private LocalTime startTime;
+
+    @Column(name = "endTime")
+    private LocalTime endTime;
 
     @Column(name = "startDate")
     private LocalDate startDate;
@@ -63,6 +70,8 @@ public class Course {
                 ", course=" + course +
                 ", title=" + title +
                 ", days=" + days +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", room=" + room +
