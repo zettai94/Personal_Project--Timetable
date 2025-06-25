@@ -48,56 +48,54 @@ public class CourseService {
                     continue; 
                 }
                 
-                //Create Course object
-                Course course = new Course();
+                Course course;
 
                 //Check if CRN already exists in the database
+                //if CRN exist, update the course with new professors
+                //Otherwise, create a new course
                 Integer crn = (int) row.getCell(1).getNumericCellValue();
-                //if CRN exists, check if professors are the same
-                //check if Professor Set is not empty
-                if(crnExists(crn)) {
-                    Course existingCourse = courseRepo.findById(crn).orElse(null);
-                    //update 
+            
+                if(crnExists(crn)) 
+                {
+                    //read from the database for the Professors in current row
+                    //call on updateCourseProfessors to update the course with new professors
+                    Set<Professor> newProfessors = professorSet(row.getCell(7).getStringCellValue().split(","));
+                    course = updateCourseProfessors(crn, newProfessors);
                 }
-                else {
-                    
-                }
-
-                //Create Campus first
-                //only create Campus if it does not exist in the database
-                String campusName = row.getCell(0).getStringCellValue();
-                Campus campus = campService.getOrCreateCampus(campusName);
+                else 
+                {
+                    //Create a new course
+                    course = new Course();
+                    course.setCrn(crn);
+                        
+                    //Create Campus first
+                    //only create Campus if it does not exist in the database
+                    String campusName = row.getCell(0).getStringCellValue();
+                    Campus campus = campService.getOrCreateCampus(campusName);
                 
 
-                //Create Professor next; if there's "," then there's multiple professors
-                //Professor can have same name but different id depending on the course
-                Set<Professor> professors = new HashSet<>();
-                String[] profNames = row.getCell(7).getStringCellValue().split(",");
-                for(String profName: profNames)
-                {
-                    //trim whitespace and create new Professor
-                    String name = profName.trim();
-                    Professor newProf = new Professor();
-                    newProf.setProfName(name);
-                    if(professors.stream().noneMatch(p -> p.getProfName().equals(name))) {
-                        professors.add(newProf);
+                    //Create Professor next; if there's "," then there's multiple professors
+                    //Professor can have same name but different id depending on the course
+                    String[] profNames = row.getCell(7).getStringCellValue().split(",");
+                    Set<Professor> professor = professorSet(profNames);
+                
+                    //Build room string
+                    String buildingRoom = row.getCell(5).getStringCellValue();
+                    if(buildingRoom.trim().equals("DL"))
+                    {
+                        buildingRoom += "-WEB";
+                    }
+                    else if (buildingRoom.trim().equals("REMOTE"))
+                    {
+                        continue; //skip remote courses
+                    }
+                    else
+                    {
+                        buildingRoom += " " + row.getCell(6).getStringCellValue();
                     }
                 }
+
                 
-                //Build room string
-                String buildingRoom = row.getCell(5).getStringCellValue();
-                if(buildingRoom.trim().equals("DL"))
-                {
-                    buildingRoom += "-WEB";
-                }
-                else if (buildingRoom.trim().equals("REMOTE"))
-                {
-                    continue; //skip remote courses
-                }
-                else
-                {
-                    buildingRoom += " " + row.getCell(6).getStringCellValue();
-                }
             }
             
 
@@ -130,5 +128,23 @@ public class CourseService {
         return courseRepo.save(course);
     }
     
+    public Set<Professor> professorSet(String[] profNames) {
+        //profNames could be empty, so return an empty set
+        if (profNames == null || profNames.length == 0) 
+        {
+            return new HashSet<>();
+        }
+        else
+        {
+            Set<Professor> professors = new HashSet<>();
+            for (String profName : profNames) 
+            {
+                Professor newProf = new Professor();
+                newProf.setProfName(profName.trim());
+                professors.add(newProf);
+            }
+            return professors;
+        }
+    }
     
 }

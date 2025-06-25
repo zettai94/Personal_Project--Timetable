@@ -79,4 +79,7 @@ public class Course {
                 ", professors=" + profList;
 
     }
+
+    //implement equals method to compare Course objects based on whole
+    //should throw exception (custom) depending on which was not the same
 }
