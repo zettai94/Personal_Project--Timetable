@@ -37,6 +37,9 @@ public class CourseService {
             Workbook workbook = WorkbookFactory.create(in);
             Sheet sheet = workbook.getSheetAt(0); //Assuming the first sheet contains the course data
 
+            //Excel sheet may contain multiple duplicates:
+            //Check if CRN already exists, if so, check if professors are the same
+            //Professor set can be empty. If empty, continue to next row
             for(Row row: sheet)
             {
                 //skip header row
@@ -44,8 +47,21 @@ public class CourseService {
                 {
                     continue; 
                 }
-
+                
+                //Create Course object
                 Course course = new Course();
+
+                //Check if CRN already exists in the database
+                Integer crn = (int) row.getCell(1).getNumericCellValue();
+                //if CRN exists, check if professors are the same
+                //check if Professor Set is not empty
+                if(crnExists(crn)) {
+                    Course existingCourse = courseRepo.findById(crn).orElse(null);
+                    //update 
+                }
+                else {
+                    
+                }
 
                 //Create Campus first
                 //only create Campus if it does not exist in the database
@@ -90,5 +106,29 @@ public class CourseService {
             e.printStackTrace();
         }
     }
+
+    //Check if CRN exists in the database
+    public boolean crnExists(Integer crn) {
+        return courseRepo.existsById(crn);
+    }
+
+    //Check if Professors are the same
+    //If not the same, update the course by adding the new professors
+    public Course updateCourseProfessors(Integer crn, Set<Professor> newProfessors) {
+        Course course = courseRepo.findById(crn).orElse(null);
+        if (course != null) {
+            Set<Professor> existingProfessors = course.getProfessors();
+            for (Professor newProf: newProfessors) {
+                //Check if the professor already exists in the course
+                if (existingProfessors.stream().noneMatch(p -> p.getProfName().equals(newProf.getProfName()))) {
+                    existingProfessors.add(newProf);
+                }
+            }
+            // Update the course with the new set of professors
+            course.setProfessors(existingProfessors);
+        }
+        return courseRepo.save(course);
+    }
+    
     
 }
