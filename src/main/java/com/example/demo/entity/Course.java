@@ -76,7 +76,8 @@ public class Course {
                 ", endDate=" + endDate +
                 ", room=" + room +
                 ", campus=" + (campus != null ? campus.getCampusName() : "null") +
-                ", professors=" + profList;
+                ", professors=" + profList + '\'' +
+                '}';
 
     }
 
