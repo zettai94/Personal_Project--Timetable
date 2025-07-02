@@ -1,6 +1,9 @@
 package com.example.demo.service;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -67,17 +70,18 @@ public class CourseService {
                     //Create a new course
                     course = new Course();
                     course.setCrn(crn);
-                        
+
                     //Create Campus first
                     //only create Campus if it does not exist in the database
                     String campusName = row.getCell(0).getStringCellValue();
                     Campus campus = campService.getOrCreateCampus(campusName);
-                
+                    course.setCampus(campus);
 
                     //Create Professor next; if there's "," then there's multiple professors
                     //Professor can have same name but different id depending on the course
                     String[] profNames = row.getCell(7).getStringCellValue().split(",");
                     Set<Professor> professor = professorSet(profNames);
+                    course.setProfessors(professor);
                 
                     //Build room string
                     String buildingRoom = row.getCell(5).getStringCellValue();
@@ -93,6 +97,29 @@ public class CourseService {
                     {
                         buildingRoom += " " + row.getCell(6).getStringCellValue();
                     }
+                    course.setRoom(buildingRoom);
+
+                    //Set days for the course
+                    //Days can be empty, so check if the cell is not null
+                    //if null, set to empty string
+                    if (row.getCell(8) == null)
+                    {
+                        course.setDays("");
+                    } 
+                    else 
+                    {
+                        course.setDays(row.getCell(8).getStringCellValue());
+                    }
+                    
+                    //date formatter for both start and end dates
+                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+                    course.setStartDate(LocalDate.parse(row.getCell(9).getStringCellValue(), dateFormatter));
+                    course.setEndDate(LocalDate.parse(row.getCell(10).getStringCellValue(), dateFormatter));
+
+                    //time formatter for start and end times
+                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmm");
+                    course.setStartTime(LocalTime.parse(row.getCell(11).getStringCellValue(), timeFormatter));
+                    course.setEndTime(LocalTime.parse(row.getCell(12).getStringCellValue(), timeFormatter));
                 }
 
                 

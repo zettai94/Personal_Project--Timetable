@@ -33,17 +33,17 @@ public class Course {
     @Column(name = "Days")
     private String days;
 
-    @Column(name = "startTime")
-    private LocalTime startTime;
-
-    @Column(name = "endTime")
-    private LocalTime endTime;
-
     @Column(name = "startDate")
     private LocalDate startDate;
 
     @Column(name = "endDate")
     private LocalDate endDate;
+
+    @Column(name = "startTime")
+    private LocalTime startTime;
+
+    @Column(name = "endTime")
+    private LocalTime endTime;
 
     @Column(name = "room")
     private String room;
@@ -70,10 +70,10 @@ public class Course {
                 ", course=" + course +
                 ", title=" + title +
                 ", days=" + days +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
                 ", room=" + room +
                 ", campus=" + (campus != null ? campus.getCampusName() : "null") +
                 ", professors=" + profList + '\'' +
