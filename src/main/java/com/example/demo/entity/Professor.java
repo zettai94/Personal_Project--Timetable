@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -21,13 +22,14 @@ public class Professor {
     @GeneratedValue
     private Integer prof_id;
 
-    @Column(name = "profName")
+    @Column(name = "profName", unique = true, nullable = false)
     private String profName;
 
     //mappedBy to avoid duplicate mapping; bidirectional association between Course and Professor
     //may have one or multiple more courses
-    // @ManyToMany(mappedBy = "professors")
-    // private Set<Course> courses;
+    @ManyToMany(mappedBy = "professors")
+    private Set<Course> courses = new HashSet<>();
+
 
     @Override
     public String toString() {

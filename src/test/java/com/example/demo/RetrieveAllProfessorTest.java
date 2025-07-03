@@ -40,8 +40,15 @@ public class RetrieveAllProfessorTest {
 
     @Test
     public void testRetrieveAllProfessors() {
-        List<Professor> expected = List.of(new Professor(1, "Dr. Smith"),
-                                            new Professor(2, "Prof. Johnson"));
+        Professor p1 = new Professor();
+        p1.setProf_id(1);
+        p1.setProfName("Dr. Smith");
+
+        Professor p2 = new Professor();
+        p2.setProf_id(2);
+        p2.setProfName("Prof. Johnson");
+        
+        List<Professor> expected = List.of(p1, p2);
 
         when(mockProfRepo.findAll()).thenReturn(expected);
 

@@ -3,13 +3,19 @@ package com.example.demo.service;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.usermodel.Sheet;
+
+import java.util.Arrays;
+import java.util.Date;
+
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -25,14 +31,17 @@ public class CourseService {
     
     private final CourseRepository courseRepo;
     private final CampusService campService;
+    private final ProfessorService professorService;
 
     @Autowired
-    public CourseService(CourseRepository courseRepo, CampusService campService) {
+    public CourseService(CourseRepository courseRepo, CampusService campService, ProfessorService professorService) {
         this.courseRepo = courseRepo;
         this.campService = campService;
+        this.professorService = professorService;
     }
 
     //Read from excel file and save courses to the database
+    
     public void loadCoursesFromExcel() {
         ClassPathResource resource = new ClassPathResource("import-data/Spring 2024 Class File.xlsx");
         try (InputStream in = resource.getInputStream()) 
@@ -56,20 +65,37 @@ public class CourseService {
                 //Check if CRN already exists in the database
                 //if CRN exist, update the course with new professors
                 //Otherwise, create a new course
-                Integer crn = (int) row.getCell(1).getNumericCellValue();
+                Integer crn = Integer.parseInt(row.getCell(3).getStringCellValue());
             
                 if(crnExists(crn)) 
                 {
                     //read from the database for the Professors in current row
                     //call on updateCourseProfessors to update the course with new professors
-                    Set<Professor> newProfessors = professorSet(row.getCell(7).getStringCellValue().split(","));
+                    Set<Professor> newProfessors = Arrays.stream(row.getCell(6).getStringCellValue().split(","))
+                                                    .map(String::trim)
+                                                    .filter(name -> !name.isEmpty()) // filter out empty strings if any
+                                                    .map(professorService::getOrCreateProfessor) // Use getOrCreateProfessor here
+                                                    .collect(Collectors.toSet());
                     course = updateCourseProfessors(crn, newProfessors);
+                    
+                    //assuming the repeating crn is only added due to new professors
+                    //so we do not need to update other fields
                 }
                 else 
                 {
                     //Create a new course
                     course = new Course();
                     course.setCrn(crn);
+
+                    //set coreq, if not null, read from cell, otherwise set to null
+                    if (row.getCell(14) != null && !row.getCell(14).getStringCellValue().isEmpty()) 
+                    {
+                        course.setCoreq(Integer.parseInt(row.getCell(14).getStringCellValue()));
+                    } 
+                    else 
+                    {
+                        course.setCoreq(null);
+                    }
 
                     //Create Campus first
                     //only create Campus if it does not exist in the database
@@ -80,46 +106,76 @@ public class CourseService {
                     //Create Professor next; if there's "," then there's multiple professors
                     //Professor can have same name but different id depending on the course
                     String[] profNames = row.getCell(7).getStringCellValue().split(",");
-                    Set<Professor> professor = professorSet(profNames);
-                    course.setProfessors(professor);
+                    //because professors can be empty, we need to check if profNames is empty
+                    //if empty, set to empty set
+                    Set<Professor> professor;
+                    if(profNames.length == 1 && profNames[0].trim().isEmpty())
+                    {
+                        professor = new HashSet<>();
+                        course.setProfessors(professor);
+                    } 
+                    else 
+                    {
+                        professor = Arrays.stream(profNames).map(String::trim)
+                                    .filter(name -> !name.isEmpty()) // Add this to handle empty strings from split
+                                    .map(professorService::getOrCreateProfessor) // <--- Changed to getOrCreateProfessor
+                                    .collect(Collectors.toSet());
+                        course.setProfessors(professor); // Set the professors to the course
+                    }
+                     
                 
                     //Build room string
-                    String buildingRoom = row.getCell(5).getStringCellValue();
+                    String buildingRoom = row.getCell(4).getStringCellValue();
                     if(buildingRoom.trim().equals("DL"))
                     {
                         buildingRoom += "-WEB";
                     }
                     else if (buildingRoom.trim().equals("REMOTE"))
                     {
-                        continue; //skip remote courses
+                        //do nothing, just keep the string as is
                     }
                     else
                     {
-                        buildingRoom += " " + row.getCell(6).getStringCellValue();
+                        buildingRoom += " " + row.getCell(5).getStringCellValue();
                     }
                     course.setRoom(buildingRoom);
 
                     //Set days for the course
                     //Days can be empty, so check if the cell is not null
                     //if null, set to empty string
-                    if (row.getCell(8) == null)
+                    if(row.getCell(7) != null && !row.getCell(7).getStringCellValue().isEmpty()) 
                     {
-                        course.setDays("");
+                        course.setDays(row.getCell(7).getStringCellValue());
                     } 
                     else 
                     {
-                        course.setDays(row.getCell(8).getStringCellValue());
+                        course.setDays(null);
                     }
                     
                     //date formatter for both start and end dates
-                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-                    course.setStartDate(LocalDate.parse(row.getCell(9).getStringCellValue(), dateFormatter));
-                    course.setEndDate(LocalDate.parse(row.getCell(10).getStringCellValue(), dateFormatter));
+                    Date excelDate = row.getCell(8).getDateCellValue();
+                    LocalDate startDate = excelDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    course.setStartDate(startDate);
+
+                    excelDate = row.getCell(9).getDateCellValue();
+                    LocalDate endDate = excelDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    course.setEndDate(endDate);
 
                     //time formatter for start and end times
-                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmm");
-                    course.setStartTime(LocalTime.parse(row.getCell(11).getStringCellValue(), timeFormatter));
-                    course.setEndTime(LocalTime.parse(row.getCell(12).getStringCellValue(), timeFormatter));
+                    //could be null or empty, so check if the cell is not null
+                    if (row.getCell(10) == null || row.getCell(10).getStringCellValue().isEmpty() ||
+                        row.getCell(11) == null || row.getCell(11).getStringCellValue().isEmpty()) 
+                    {
+                        course.setStartTime(null);
+                        course.setEndTime(null);
+                    } 
+                    else 
+                    {
+                        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmm");
+                        course.setStartTime(LocalTime.parse(row.getCell(10).getStringCellValue(), timeFormatter));
+                        course.setEndTime(LocalTime.parse(row.getCell(11).getStringCellValue(), timeFormatter));
+                    }
+                    courseRepo.save(course); //Save the course to the database
                 }
 
                 

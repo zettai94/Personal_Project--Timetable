@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -57,7 +58,8 @@ public class Course {
     @JoinTable(name = "course_professors",
                 joinColumns = @JoinColumn(name = "courseCRN"),
                 inverseJoinColumns = @JoinColumn(name = "profId"))
-    private Set<Professor> professors;
+    private Set<Professor> professors = new HashSet<>();
+
 
     @Override
     public String toString()

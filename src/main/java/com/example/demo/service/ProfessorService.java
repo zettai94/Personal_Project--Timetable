@@ -18,12 +18,18 @@ public class ProfessorService
     }
 
     //Create a new Professor in the database
-    public Professor newProfessor(String name)
+    public Professor getOrCreateProfessor(String name)
     {
-        //Does not consider duplicate names for now
-        Professor newProf = new Professor();
-        newProf.setProfName(name);
-        return professorRepo.save(newProf);
+        if(professorRepo.findByProfName(name) != null) {
+            return professorRepo.findByProfName(name);
+        }
+        else
+        {
+            Professor newProf = new Professor();
+            newProf.setProfName(name);
+            return professorRepo.save(newProf);
+        }
+        
         //to be edited later; throw exception if name already exists
     }
 
