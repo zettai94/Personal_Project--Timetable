@@ -85,7 +85,12 @@ public class CourseService {
                 {
                     //Create a new course
                     course = new Course();
+
+                    //set CRN
                     course.setCrn(crn);
+
+                    //set course title
+                    course.setTitle(row.getCell(2).getStringCellValue());
 
                     //set coreq, if not null, read from cell, otherwise set to null
                     if (row.getCell(14) != null && !row.getCell(14).getStringCellValue().isEmpty()) 
@@ -105,23 +110,27 @@ public class CourseService {
 
                     //Create Professor next; if there's "," then there's multiple professors
                     //Professor can have same name but different id depending on the course
-                    String[] profNames = row.getCell(7).getStringCellValue().split(",");
+                    String[] profNames = row.getCell(6).getStringCellValue().split(",");
                     //because professors can be empty, we need to check if profNames is empty
                     //if empty, set to empty set
                     Set<Professor> professor;
-                    if(profNames.length == 1 && profNames[0].trim().isEmpty())
+                    if(profNames.length == 0 && profNames[0].trim().isEmpty())
                     {
                         professor = new HashSet<>();
                         course.setProfessors(professor);
                     } 
                     else 
                     {
-                        professor = Arrays.stream(profNames).map(String::trim)
-                                    .filter(name -> !name.isEmpty()) // Add this to handle empty strings from split
-                                    .map(professorService::getOrCreateProfessor) // <--- Changed to getOrCreateProfessor
-                                    .collect(Collectors.toSet());
-                        course.setProfessors(professor); // Set the professors to the course
+                        professor = new HashSet<>();
+                        for(String prof: profNames)
+                        {
+                            prof = prof.trim(); //trim whitespace
+                            Professor newProf = professorService.getOrCreateProfessor(prof);
+                            professor.add(newProf); //add the professor to the set
+                        }
+                        
                     }
+                    course.setProfessors(professor); // Set the professors to the course
                      
                 
                     //Build room string
@@ -228,6 +237,10 @@ public class CourseService {
             }
             return professors;
         }
+    }
+
+    public Course getCourseByCrn(Integer crn) {
+        return courseRepo.findById(crn).orElse(null);
     }
     
 }
