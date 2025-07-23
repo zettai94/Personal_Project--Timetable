@@ -116,7 +116,7 @@ public class CourseService {
                     //because professors can be empty, we need to check if profNames is empty
                     //if empty, set to empty set
                     Set<Professor> professor;
-                    if(profNames.length == 0 && profNames[0].trim().isEmpty())
+                    if(row.getCell(6) == null || row.getCell(6).getStringCellValue().trim().isEmpty())
                     {
                         professor = new HashSet<>();
                         course.setProfessors(professor);
