@@ -41,6 +41,8 @@ public class CourseService {
     }
 
     //Read from excel file and save courses to the database
+
+    //this is not normalized, should probably be moved to a separate service
     
     public void loadCoursesFromExcel() {
         ClassPathResource resource = new ClassPathResource("import-data/Spring 2024 Class File.xlsx");
