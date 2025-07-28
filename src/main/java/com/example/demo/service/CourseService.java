@@ -111,7 +111,10 @@ public class CourseService {
                     course.setCampus(campus);
 
                     //Create Professor next; if there's "," then there's multiple professors
-                    //Professor can have same name but different id depending on the course
+
+                    // --->>> Professor name is assumed as unique, 
+                    // Excel data gives a mix of first name, last name, or full name
+
                     String[] profNames = row.getCell(6).getStringCellValue().split(",");
                     //because professors can be empty, we need to check if profNames is empty
                     //if empty, set to empty set
