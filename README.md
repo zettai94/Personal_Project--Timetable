@@ -26,7 +26,6 @@ A Spring Boot web application where an **administrator uploads an Excel file** c
 - ✅ Parse Excel rows into Java objects
 - ✅ Persist schedule entries in H2 (or MySQL) database using Spring Data JPA
 - ✅ Display a visual calendar of classes (weekly and monthly views)
-- ✅ Simple, intuitive web interface using Thymeleaf
 
 ---
 
