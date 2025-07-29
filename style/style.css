@@ -97,11 +97,38 @@ header {
 	justify-content: center;
 	align-items: center;
 	display: flex;
+	transition: height .2s ease;
+}
+
+.wrapper.active {
+	height: 520px;
 }
 
 .wrapper .form-box {
 	width: 100%;
 	padding: 40px;
+}
+
+.wrapper .form-box.login {
+	/* display: none; */
+}
+
+.wrapper .form-box.register {
+	position: absolute;
+	transform: translateX(400px);
+}
+.wrapper .icon-close {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	color: #60078a;
+	font-size: 25px;
+	cursor: pointer;
+	transition: color 0.3s;
+}
+
+.wrapper .icon-close:hover {
+	color: red;
 }
 
 .form-box h2 {
@@ -199,4 +226,13 @@ header {
 	text-align: center;
 	font-weight: 500;
 	margin: 25px 0 10px;
+}
+
+.login-register p a {
+	text-decoration: none;
+	font-weight: 600;
+}
+
+.login-register p a:hover {
+	text-decoration: underline;
 }
