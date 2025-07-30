@@ -97,8 +97,13 @@ header {
 	justify-content: center;
 	align-items: center;
 	display: flex;
-	transition: height .2s ease;
 	overflow: hidden;
+	transform: scale(0);
+	transition: transform .5s ease, height .2s ease;
+}
+
+.wrapper.active-popup {
+	transform: scale(1);
 }
 
 .wrapper.active {
