@@ -98,6 +98,7 @@ header {
 	align-items: center;
 	display: flex;
 	transition: height .2s ease;
+	overflow: hidden;
 }
 
 .wrapper.active {
@@ -110,13 +111,26 @@ header {
 }
 
 .wrapper .form-box.login {
-	/* display: none; */
+	transition: transform .18s ease;
+	transform: translateX(0);
+}
+
+.wrapper.active .form-box.login {
+	transition: none;
+	transform: translateX(-400px);
 }
 
 .wrapper .form-box.register {
 	position: absolute;
+	transition: none;
 	transform: translateX(400px);
 }
+
+.wrapper.active .form-box.register {
+	transition: transform .18s ease;
+	transform: translateX(0);
+}
+
 .wrapper .icon-close {
 	position: absolute;
 	top: 20px;
@@ -124,6 +138,7 @@ header {
 	color: #60078a;
 	font-size: 25px;
 	cursor: pointer;
+	z-index: 1;
 	transition: color 0.3s;
 }
 
