@@ -87,20 +87,6 @@ header {
 }
 
 .wrapper {
-	/* position: relative;
-	width: 400px;
-	height: 430px;
-	background: #dfbffacc;
-	border: 2px solid #fff;
-	border-radius: 20px;
-	backdrop-filter: blur(5px);
-	box-shadow: 0 0 30px #00000080;
-	justify-content: center;
-	align-items: center;
-	display: flex;
-	overflow: hidden;
-	transform: scale(0);
-	transition: transform .5s ease, height .2s ease; */
 	position: fixed; /* NEW: Anchors the wrapper to the browser window */
     top: 50%; /* NEW: Aligns the top edge with the vertical center of the window */
     left: 50%; /* NEW: Aligns the left edge with the horizontal center of the window */
@@ -124,7 +110,6 @@ header {
 }
 
 .wrapper.active-popup {
-	/* transform: scale(1); */
 	transform: translate(-50%, -50%) scale(1); /* NEW: Scales it up to show it */
     opacity: 1; /* NEW: Makes it visible */
     visibility: visible; /* NEW: Shows it to screen readers */
@@ -292,3 +277,15 @@ header {
 	z-index:2;
 }
 
+.scrollable-content section {
+    /* Padding: Adds internal space inside the section */
+    padding: 50px; 
+    
+    /* Margin: Adds external space below each section */
+    margin-bottom: 30px; 
+    
+    /* Other optional styles for visual separation */
+    background: #f8f8f8;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px #60078a;
+}
