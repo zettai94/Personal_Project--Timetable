@@ -21,7 +21,7 @@ header {
 	left: 0;
 	width: 100%;
 	padding: 20px 100px;
-	background: rebeccapurple;
+	background: #663399;
 	display: flex;
 	justify-content: space-between; /* put space in between */
 	align-items: center;
@@ -89,7 +89,7 @@ header {
 	position: relative;
 	width: 400px;
 	height: 430px;
-	background: rgba(223, 191, 250, 0.8);
+	background: #dfbffacc;
 	border: 2px solid #fff;
 	border-radius: 20px;
 	backdrop-filter: blur(5px);
@@ -256,3 +256,4 @@ header {
 .login-register p a:hover {
 	text-decoration: underline;
 }
+
