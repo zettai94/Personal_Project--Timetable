@@ -19,3 +19,5 @@ btnPopup.addEventListener('click', () => {
 iconClose.addEventListener('click', () => {
     wrapper.classList.remove('active-popup');
 });
+
+const loginForm = document.querySelector('.form-box.login form');
