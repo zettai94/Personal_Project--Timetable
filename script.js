@@ -48,7 +48,7 @@ loginForm.addEventListener('submit', async (e) => {
         }
         else
         {
-           alert("Some error occurred. Please try again later.");
+           alert("Some error occurred. Please try again later. Status code: " + response.status);
         }
     }
     catch (error)

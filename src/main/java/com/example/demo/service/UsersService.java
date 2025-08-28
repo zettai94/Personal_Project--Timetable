@@ -17,8 +17,11 @@ public class UsersService {
 
     public Users authentication(Users user)
     {
+        System.out.println("Received Email: " + user.getEmail());
+        System.out.println("Received Password: " + user.getPassword());
+        
         //for testing purposes only
-        if("test@gmail.com".equals(user.getEmail()) || "password123".equals(user.getPassword()))
+        if("test@gmail.com".equals(user.getEmail()) && "password123".equals(user.getPassword()))
         {
             return user;
         }
