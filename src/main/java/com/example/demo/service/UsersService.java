@@ -29,6 +29,7 @@ public class UsersService {
         return null;
     }
 
+    //for later use
     // public boolean usernamePassValidation(Users user)
     // {
     //     //validate username and password
